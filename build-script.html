@@ -1,0 +1,415 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Build script · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="actix-plugin.html" />
+    
+    
+    <link rel="prev" href="cli.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Overview
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="cli.html">
+            
+                <a href="cli.html">
+            
+                    
+                    CLI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="build-script.html">
+            
+                <a href="build-script.html">
+            
+                    
+                    Build script
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="actix-plugin.html">
+            
+                <a href="actix-plugin.html">
+            
+                    
+                    Actix-web plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Build script</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="generate-client-code-using-build-script">Generate client code using build script</h1>
+<p>This example generates code using a <a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html" target="_blank">build script</a>.</p>
+<ul>
+<li><p>Create a new project using cargo: <code>cargo new my_awesome_app</code></p>
+</li>
+<li><p>Modify your <code>Cargo.toml</code> to look like this:</p>
+</li>
+</ul>
+<pre><code class="lang-toml"><span class="hljs-section">[package]</span>
+<span class="hljs-attr">name</span> = <span class="hljs-string">&quot;my_awesome_app&quot;</span>
+<span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span>
+<span class="hljs-attr">authors</span> = [<span class="hljs-string">&quot;Me &lt;me@example.com&gt;&quot;</span>]
+<span class="hljs-attr">edition</span> = <span class="hljs-string">&quot;2018&quot;</span>
+<span class="hljs-attr">build</span> = <span class="hljs-string">&quot;build.rs&quot;</span>
+<span class="hljs-section">
+[dependencies]</span>
+<span class="hljs-comment"># Crates required by the generated code!</span>
+<span class="hljs-attr">thiserror</span> = <span class="hljs-string">&quot;1.0.19&quot;</span>
+<span class="hljs-attr">futures</span> = <span class="hljs-string">&quot;0.1&quot;</span>
+<span class="hljs-attr">parking_lot</span> = <span class="hljs-string">&quot;0.8&quot;</span>
+<span class="hljs-attr">reqwest</span> = <span class="hljs-string">&quot;0.9&quot;</span>
+<span class="hljs-attr">serde</span> = <span class="hljs-string">&quot;1.0&quot;</span>
+<span class="hljs-comment"># Other crates I&apos;m using for this example.</span>
+<span class="hljs-attr">futures-preview</span> = { version = <span class="hljs-string">&quot;0.3.0-alpha.16&quot;</span>, features = [<span class="hljs-string">&quot;compat&quot;</span>], package = <span class="hljs-string">&quot;futures-preview&quot;</span> }
+<span class="hljs-attr">runtime</span> = <span class="hljs-string">&quot;0.3.0-alpha.7&quot;</span>
+<span class="hljs-attr">runtime-tokio</span> = <span class="hljs-string">&quot;0.3.0-alpha.6&quot;</span>
+<span class="hljs-section">
+[build-dependencies]</span>
+<span class="hljs-attr">paperclip</span> = { version = <span class="hljs-string">&quot;0.4&quot;</span>, features = [<span class="hljs-string">&quot;v2&quot;</span>, <span class="hljs-string">&quot;codegen&quot;</span>] }
+</code></pre>
+<ul>
+<li><p>Add <code>my-spec.yaml</code> to the project root with contents from <a href="https://raw.githubusercontent.com/wafflespeanut/paperclip/master/tests/pet-v2.yaml" target="_blank">this file</a>.</p>
+</li>
+<li><p>Now, add <code>build.rs</code> to the project root with the following:</p>
+</li>
+</ul>
+<pre><code class="lang-rust"><span class="hljs-keyword">use</span> paperclip::v2::{
+    <span class="hljs-keyword">self</span>,
+    codegen::{DefaultEmitter, Emitter, EmitterState},
+    models::{Api, DefaultSchema},
+};
+
+<span class="hljs-keyword">use</span> std::env;
+<span class="hljs-keyword">use</span> std::fs::File;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+    <span class="hljs-keyword">let</span> fd = File::open(<span class="hljs-string">&quot;my-spec.yaml&quot;</span>).expect(<span class="hljs-string">&quot;schema?&quot;</span>);
+    <span class="hljs-keyword">let</span> raw: Api&lt;DefaultSchema&gt; = v2::from_reader(fd).expect(<span class="hljs-string">&quot;deserializing spec&quot;</span>);
+    <span class="hljs-keyword">let</span> schema = raw.resolve().expect(<span class="hljs-string">&quot;resolution&quot;</span>);
+
+    <span class="hljs-keyword">let</span> out_dir = env::var(<span class="hljs-string">&quot;OUT_DIR&quot;</span>).unwrap();
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> state = EmitterState::default();
+    <span class="hljs-comment">// set prefix for using generated code inside `codegen` module (see main.rs).</span>
+    state.mod_prefix = <span class="hljs-string">&quot;crate::codegen::&quot;</span>;
+    state.working_dir = out_dir.into();
+
+    <span class="hljs-keyword">let</span> emitter = DefaultEmitter::from(state);
+    emitter.generate(&amp;schema).expect(<span class="hljs-string">&quot;codegen&quot;</span>);
+}
+</code></pre>
+<ul>
+<li>Now, you can modify <code>src/main.rs</code> to make use of the generated code:</li>
+</ul>
+<pre><code class="lang-rust"><span class="hljs-meta">#[macro_use]</span> <span class="hljs-keyword">extern</span> <span class="hljs-keyword">crate</span> serde;
+
+<span class="hljs-keyword">use</span> thiserror::Error;
+<span class="hljs-keyword">use</span> futures_preview::compat::Future01CompatExt;
+<span class="hljs-keyword">use</span> reqwest::r#async::Client;
+
+<span class="hljs-keyword">mod</span> codegen {
+    <span class="hljs-meta">#![allow(dead_code)]</span>
+    include!(<span class="hljs-built_in">concat!</span>(<span class="hljs-built_in">env!</span>(<span class="hljs-string">&quot;OUT_DIR&quot;</span>), <span class="hljs-string">&quot;/mod.rs&quot;</span>));
+}
+
+<span class="hljs-keyword">use</span> self::codegen::client::Sendable;
+<span class="hljs-keyword">use</span> self::codegen::pet::Pet;
+
+<span class="hljs-meta">#[runtime::main(runtime_tokio::Tokio)]</span>
+async <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() -&gt; <span class="hljs-built_in">Result</span>&lt;(), Error&gt; {
+    <span class="hljs-keyword">let</span> client = Client::new();
+    <span class="hljs-keyword">let</span> pets = Pet::list_pets().send(&amp;client).compat().await?;
+    <span class="hljs-literal">Ok</span>(())
+}
+</code></pre>
+<p>Some things to note:</p>
+<ul>
+<li>I&apos;m using async/await only to demonstrate the usage of the generated code. The generated client code uses the old <a href="https://docs.rs/futures/0.1.28/futures/" target="_blank">futures 0.1</a> and won&apos;t switch to the new syntax until it&apos;s stablilized.</li>
+<li>The names of associated functions for each <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject" target="_blank">operation</a> (such as <code>list_pets</code>) is obtained from <code>operationId</code> fields. But since it&apos;s optional and if the user has ignored it in their spec, then we use HTTP methods and number them if there are more than one.</li>
+<li>The emitter tries to bind each operation to some model (based on <code>body</code> parameters and <code>2xx</code> responses). If it cannot bind it, then they&apos;re ignored (at this point).</li>
+</ul>
+<h2 id="compile-time-checks">Compile-time checks?</h2>
+<p>API calls often <em>require</em> some parameters. Should we miss those parameters when performing a request, either the client will produce a runtime error or the server will reject our request. Our generated client code on the other hand, uses markers to avoid this problem at compile-time.</p>
+<p>For example, in order to fetch a pet, <a href="https://github.com/wafflespeanut/paperclip/blob/fa95b023aaf8b6e396c899a93a9eda6fd791505c/openapi/tests/pet-v2.yaml#L42-L47" target="_blank"><code>petId</code> parameter</a> is required. Let&apos;s change the main function in the above example to fetch a pet without its ID.</p>
+<pre><code class="lang-rust"><span class="hljs-keyword">let</span> pet = Pet::get_pet_by_id().send(&amp;client).compat().await?;
+</code></pre>
+<p>If we try and compile the program, then we&apos;ll get the following error:</p>
+<pre><code>error[E0599]: no method named `send` found for type
+`codegen::pet::PetGetBuilder1&lt;codegen::generics::MissingPetId&gt;`
+in the current scope
+</code></pre><p>Note that the struct <code>PetGetBuilder1</code> has been marked with <code>MissingPetId</code>. And, <code>send</code> is implemented only when the builder has <code>PetIdExists</code> marker.</p>
+<p>Hence the fix would be to set the required parameter using the relevant method call (which transforms the builder struct).</p>
+<pre><code class="lang-rust"><span class="hljs-keyword">let</span> pet = Pet::get_pet_by_id()
+    .pet_id(<span class="hljs-number">25</span>)
+    .send(&amp;client)
+    .compat().await?;
+</code></pre>
+<p>... and the code will compile.</p>
+<p>The same applies to using API objects (with required fields). For example, the <a href="https://github.com/wafflespeanut/paperclip/blob/98a2c053c283ebbbef9b17f7e0ac6ddb0e64f77f/tests/pet-v2.yaml#L125-L148" target="_blank"><code>addPet</code> operation</a> requires <code>Pet</code> object to be present in the HTTP body, but then <code>Pet</code> object itself requires <a href="https://github.com/wafflespeanut/paperclip/blob/98a2c053c283ebbbef9b17f7e0ac6ddb0e64f77f/tests/pet-v2.yaml#L44-L46" target="_blank"><code>id</code> and <code>name</code> fields</a>.</p>
+<p>So, if we did this:</p>
+<pre><code class="lang-rust"><span class="hljs-keyword">let</span> pet = Pet::add_pet().send(&amp;client).compat().await?;
+</code></pre>
+<p>... we&apos;d get an error during compilation:</p>
+<pre><code>no method named `send` found for type `codegen::pet::PetPostBuilder&lt;
+    codegen::generics::MissingId,
+    codegen::generics::MissingName
+&gt;` in the current scope
+</code></pre><p>As we can see, the builder struct has been marked with <code>MissingId</code> and <code>MissingName</code>, but again <code>send</code> is implemented only if the struct had <code>IdExists</code> and <code>NameExists</code> markers.</p>
+<p>Now, we change the code to:</p>
+<pre><code class="lang-rust"><span class="hljs-keyword">let</span> pet = Pet::add_pet()
+    .id(<span class="hljs-number">25</span>)
+    .name(<span class="hljs-string">&quot;Milo&quot;</span>)
+    .send(&amp;client)
+    .compat().await?;
+</code></pre>
+<p>... and the code will compile.</p>
+<blockquote>
+<p><strong>NOTE:</strong> The types of arguments are also enforced.</p>
+</blockquote>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="cli.html" class="navigation navigation-prev " aria-label="Previous page: CLI">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="actix-plugin.html" class="navigation navigation-next " aria-label="Next page: Actix-web plugin">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Build script","level":"1.2.2","depth":2,"next":{"title":"Actix-web plugin","level":"1.2.3","depth":2,"path":"actix-plugin.md","ref":"actix-plugin.md","articles":[]},"previous":{"title":"CLI","level":"1.2.1","depth":2,"path":"cli.md","ref":"cli.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"build-script.md","mtime":"2020-09-07T22:19:06.979Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-07T22:22:34.759Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
